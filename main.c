@@ -72,14 +72,14 @@ int main(){
         if (keys[SDL_SCANCODE_LEFT]) posx1 -= 10;
         if (keys[SDL_SCANCODE_RIGHT]) posx1 += 10;
 
-        /* clamp X */
+        // clamp x
         if (posx1 < radius)
             posx1 = radius;
 
         if (posx1 > WIDTH - radius)
             posx1 = WIDTH - radius;
 
-        /* clamp Y */
+        // clamp y
         if (posy1 < radius)
             posy1 = radius;
 
