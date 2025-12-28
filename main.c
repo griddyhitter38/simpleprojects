@@ -59,7 +59,7 @@ void updatePhysics(
 
     // gravity
     const float g0 = 1000.0f;
-    const float k  = 2.0f;
+    const float k  = 9.81f;
     const float ayLimit = 40000.0f;
     static float y0 = 0.0f;
 
