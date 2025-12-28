@@ -9,10 +9,11 @@
 #include <bits/types/cookie_io_functions_t.h>
 #include <math.h>
 #include <stdint.h>
+#include <sys/types.h>
 #include "stdbool.h"
 
-#define HEIGHT 800
-#define WIDTH 600
+#define HEIGHT 1000
+#define WIDTH 800
 
 void drawFilledKirkle(SDL_Renderer *renderer, int cx, int cy, int radius) {
     for (int dy = -radius; dy <= radius; dy++) {
@@ -28,14 +29,16 @@ void drawFilledKirkle(SDL_Renderer *renderer, int cx, int cy, int radius) {
     }
 }
 
-void drawKirkle(SDL_Renderer *renderer, int cx, int cy, int radius){
+void drawKirkle(SDL_Renderer *renderer, int cx, int cy, int radius, int mass, float acceleration){
     int segments = 360;
+    float gravity = acceleration * mass;
 
     for (int i = 0; i < segments; i++){
         double theta = i * (2.00 * M_PI / segments);
     int x = cx + (int)(radius * cos(theta));
     int y = cy + (int)(radius * sin(theta));
-    SDL_RenderDrawLine(renderer,cx,cy,x,y);
+    SDL_RenderDrawPoint(renderer,x,y);
+
     }
 }
 
@@ -49,10 +52,24 @@ int main(){
     SDL_Init(SDL_INIT_VIDEO);
     SDL_CreateWindowAndRenderer(WIDTH, HEIGHT,  SDL_WINDOW_SHOWN, &window, &renderer);
 
-    //kirle
-    int posx1 = WIDTH / 2;
-    int posy1 = HEIGHT / 2;
-    int radius = 100;
+    //kirle white
+    int r = 255;
+    int green = 255;
+    int b = 255;
+    int a = 255;
+    int radius = 70;
+
+    //physics
+    float x = WIDTH / 2;
+    float y = HEIGHT / 2;
+    float vx = 0.0f;
+    float vy = 0.0f;
+
+    const float control = 20000.0f;
+    const float drag = 0.98f;
+    const float g = 10000.0f;
+
+    Uint32 lastTime = SDL_GetTicks();
 
     //kikr movement
     while (running){
@@ -62,40 +79,45 @@ int main(){
             running = false;
 
         }
+        Uint32 currentTime = SDL_GetTicks();
+        float deltaTime = (currentTime - lastTime) / 1000.0f;
+        lastTime = currentTime;
+        if (deltaTime > 0.05f)
+            deltaTime = 0.05f;
 
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-        int speed = 10;
+        if (keys[SDL_SCANCODE_LEFT]) vx -= control * deltaTime;
+        if (keys[SDL_SCANCODE_RIGHT]) vx += control * deltaTime;
+        if (keys[SDL_SCANCODE_UP]) vy -= control * deltaTime;
+        if (keys[SDL_SCANCODE_DOWN]) vy += control * deltaTime;
 
-        if (keys[SDL_SCANCODE_UP]) posy1 -= 10;
-        if (keys[SDL_SCANCODE_DOWN]) posy1 += 10;
-        if (keys[SDL_SCANCODE_LEFT]) posx1 -= 10;
-        if (keys[SDL_SCANCODE_RIGHT]) posx1 += 10;
+    while (vy < HEIGHT - radius){
+        vy += g * deltaTime;
+    }
+        vx *= drag;
+        vy *= drag;
+
+        x += vx * deltaTime;
+        y += vy * deltaTime;
 
         // clamp x
-        if (posx1 < radius)
-            posx1 = radius;
-
-        if (posx1 > WIDTH - radius)
-            posx1 = WIDTH - radius;
+        if (x < radius) x = radius;
+        if (x > WIDTH - radius) x = WIDTH - radius;
 
         // clamp y
-        if (posy1 < radius)
-            posy1 = radius;
-
-        if (posy1 > HEIGHT - radius)
-            posy1 = HEIGHT - radius;
-
-
+        if (y < radius) y = radius;
+        if (y > HEIGHT - radius) y = HEIGHT - radius;
 
     SDL_SetRenderDrawColor(renderer, 0,0,0,0);
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 255,255,255,255);
-    drawFilledKirkle(renderer, posx1, posy1, 100);
+    SDL_SetRenderDrawColor(renderer, r,green,b,a);
+    drawFilledKirkle(renderer, (int)x, (int)y, radius);
+    //drawKirkle(renderer, posx1, posy1, 100, 10, 0.1);
 
     SDL_RenderPresent(renderer);
-    SDL_Delay(100);
+    SDL_Delay(1);
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
