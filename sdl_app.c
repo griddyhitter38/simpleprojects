@@ -3,7 +3,7 @@
 bool init(SDL_Window **window, SDL_Renderer **renderer)
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) return false;
-    return SDL_CreateWindowAndRenderer(1000, 800, SDL_WINDOW_SHOWN,
+    return SDL_CreateWindowAndRenderer(800, 1000, SDL_WINDOW_SHOWN,
                                        window, renderer) == 0;
 }
 
