@@ -1,4 +1,4 @@
-#include "header/input_drag.h"
+#include "headers/input_drag.h"
 #include <SDL2/SDL.h>
 
 bool pointInKirkle(int mx, int my, float cx, float cy, int r)

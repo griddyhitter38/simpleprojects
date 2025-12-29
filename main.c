@@ -1,10 +1,10 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
-#include "sdl_app.h"
-#include "physics.h"
-#include "render.h"
-#include "input_drag.h"
+#include "headers/sdl_app.h"
+#include "headers/physics.h"
+#include "headers/render.h"
+#include "headers/input_drag.h"
 
 int main(void)
 {
