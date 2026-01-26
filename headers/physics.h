@@ -8,24 +8,29 @@
 
 typedef struct {
     float x, y;
-    float vx, vy;
-    float ax, ay;
+} Vec2;
+
+typedef struct {
+    Vec2 pos;
+    Vec2 vel;
+    Vec2 acc;
     int half;
     Uint8 R, G, B, A;
 } Square;
 
-void updatePhysics(float *x, float *y,
-                   float *vx, float *vy,
-                   float *ax, float *ay,
-                   int radius, float dt);
+typedef struct {
+    Vec2 v[3];
+    Uint8 R, G, B, A;
+} Triangle;
+
+void updatePhysics(Vec2 *pos, Vec2 *vel, Vec2 *acc, int radius, float dt);
 
 void updateSquare(Square *s, float dt);
 
-void resolveKirkleSquareCollision(float *cx, float *cy,
-                                  float *cvx, float *cvy,
+void resolveKirkleSquareCollision(Vec2 *cpos, Vec2 *cvel,
                                   int r, Square *sq);
 
-void clampKirkleToBounds(float *x, float *y, float *vx, float *vy, int r);
+void clampKirkleToBounds(Vec2 *pos, Vec2 *vel, int r);
 void clampSquareToBounds(Square *s);
 
 #endif

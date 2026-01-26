@@ -6,13 +6,13 @@
 
 typedef enum { DRAG_NONE, DRAG_KIRKLE, DRAG_SQUARE } DragTarget;
 
-bool pointInKirkle(int mx, int my, float cx, float cy, int r);
+bool pointInKirkle(int mx, int my, Vec2 c, int r);
 bool pointInSquare(int mx, int my, const Square *s);
 
 void handleEvents(bool *running,
                   DragTarget *dragTarget,
                   float *grabOffsetX, float *grabOffsetY,
-                  float *cx, float *cy, float *cvx, float *cvy, int cr,
+                  Vec2 *cpos, Vec2 *cvel, int cr,
                   Square *square);
 
 #endif
